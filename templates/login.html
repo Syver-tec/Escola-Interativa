@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5 col-lg-4">
+        <div class="card p-4 shadow-sm">
+            <div class="text-center mb-3">
+                <span class="display-5 text-primary"><i class="bi bi-person-lock"></i></span>
+                <h2 class="fw-bold mb-2">Acesso do Administrador</h2>
+            </div>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_username">Nome de usuário</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        {{ form.username|add_class:'form-control' }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="id_password">Senha</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        {{ form.password|add_class:'form-control' }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-2">Entrar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

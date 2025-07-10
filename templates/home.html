@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-8 col-lg-7">
+        <div class="card p-4 shadow-sm">
+            <div class="text-center mb-4">
+                <span class="display-5 text-primary"><i class="bi bi-mortarboard"></i></span>
+                <h2 class="fw-bold mb-2">Portal de Feedback Educacional</h2>
+                <p class="text-muted mb-0">Sua opinião é fundamental para melhorarmos a Escola Interativa!</p>
+            </div>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <!-- Informações Pessoais -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="id_name">{{ form.name.label }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            {{ form.name|add_class:'form-control' }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="id_email">{{ form.email.label }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            {{ form.email|add_class:'form-control' }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações Acadêmicas -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="id_student_id">{{ form.student_id.label }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                            {{ form.student_id|add_class:'form-control' }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="id_course">{{ form.course.label }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-book"></i></span>
+                            {{ form.course|add_class:'form-control' }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="id_semester">{{ form.semester.label }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                            {{ form.semester|add_class:'form-control' }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="id_teacher">{{ form.teacher.label }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                            {{ form.teacher|add_class:'form-control' }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_subject">{{ form.subject.label }}</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-journal-text"></i></span>
+                        {{ form.subject|add_class:'form-control' }}
+                    </div>
+                </div>
+
+                <!-- Tipo e Categoria -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="id_type">{{ form.type.label }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-ui-checks"></i></span>
+                            {{ form.type|add_class:'form-select' }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="id_category">{{ form.category.label }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-tags"></i></span>
+                            {{ form.category|add_class:'form-select' }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensagem -->
+                <div class="mb-4">
+                    <label for="id_message">{{ form.message.label }}</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-chat-text"></i></span>
+                        {{ form.message|add_class:'form-control' }}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-send"></i> Enviar Feedback
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

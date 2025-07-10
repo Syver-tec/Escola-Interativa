@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% block content %}
+
+<!-- Seção de Seleção de Instituição -->
+<div class="card p-4 mb-4 shadow-sm bg-light">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h4 class="mb-0"><i class="bi bi-building"></i> Selecione a Instituição</h4>
+            <p class="text-muted mb-0">Escolha a escola/faculdade para visualizar os feedbacks</p>
+        </div>
+        <div class="col-md-6">
+            {% if institutions %}
+            <form method="get" class="d-flex gap-2">
+                <select name="institution" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Selecione uma instituição --</option>
+                    {% for institution in institutions %}
+                    <option value="{{ institution.code }}" {% if selected_institution == institution.code %}selected{% endif %}>
+                        {{ institution.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
+            {% else %}
+            <div class="alert alert-warning mb-0">
+                <i class="bi bi-exclamation-triangle"></i>
+                <strong>Atenção:</strong> Você não tem autorização para acessar nenhuma instituição.
+                Entre em contato com o administrador do sistema.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Formulário de Acesso (aparece apenas quando uma instituição é selecionada) -->
+{% if selected_institution %}
+<div class="card p-4 mb-4 shadow-sm border-success">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h5 class="text-success mb-2"><i class="bi bi-check-circle"></i> Acesso Liberado</h5>
+            <p class="mb-0">Você está visualizando os feedbacks da instituição selecionada. Use os filtros abaixo para gerenciar os registros.</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'prioritize_all' %}?institution={{ selected_institution }}" class="btn btn-warning" onclick="return confirm('Priorizar todos os feedbacks pendentes como alta prioridade?');">
+                <i class="bi bi-exclamation-triangle"></i> Priorizar Todos
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Principal -->
+<div class="card p-4 mb-4 shadow-sm">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0"><i class="bi bi-speedometer2"></i> Painel do Administrador</h2>
+        <div class="d-flex align-items-center gap-2">
+            <form method="get" class="d-flex align-items-center gap-2 me-3">
+                <input type="hidden" name="institution" value="{{ selected_institution }}">
+                <select name="type" class="form-select">
+                    <option value="">Todos os tipos</option>
+                    {% for value, label in type_choices %}
+                    <option value="{{ value }}" {% if filter_type == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <select name="category" class="form-select">
+                    <option value="">Todas as categorias</option>
+                    {% for value, label in category_choices %}
+                    <option value="{{ value }}" {% if filter_category == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <select name="status" class="form-select">
+                    <option value="">Todos os status</option>
+                    {% for value, label in status_choices %}
+                    <option value="{{ value }}" {% if filter_status == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <select name="priority" class="form-select">
+                    <option value="">Todas as prioridades</option>
+                    {% for value, label in priority_choices %}
+                    <option value="{{ value }}" {% if filter_priority == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h4>{{ stats.total }}</h4>
+                    <p class="mb-0">Total de Feedback</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body text-center">
+                    <h4>{{ stats.pending }}</h4>
+                    <p class="mb-0">Pendentes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body text-center">
+                    <h4>{{ stats.high_priority }}</h4>
+                    <p class="mb-0">Alta Prioridade</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h4>{{ avg_satisfaction }}/5</h4>
+                    <p class="mb-0">Satisfação Média</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Tipo</th>
+                    <th>Categoria</th>
+                    <th>Prioridade</th>
+                    <th>Mensagem</th>
+                    <th>Status</th>
+                    <th>Nota</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fb in feedbacks %}
+                <tr>
+                    <td>{{ fb.date_submitted|date:'d/m/Y H:i' }}</td>
+                    <td>{{ fb.name }}</td>
+                    <td>{{ fb.email }}</td>
+                    <td>{{ fb.get_type_display }}</td>
+                    <td>{{ fb.get_category_display }}</td>
+                    <td>
+                        <span class="badge bg-{% if fb.priority == 'high' %}danger{% elif fb.priority == 'medium' %}warning{% else %}secondary{% endif %}">
+                            {{ fb.get_priority_display }}
+                        </span>
+                        <div class="mt-2">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{% url 'update_priority' fb.pk 'high' %}?institution={{ selected_institution }}" class="btn btn-sm btn-outline-danger">Alta</a>
+                                <a href="{% url 'update_priority' fb.pk 'medium' %}?institution={{ selected_institution }}" class="btn btn-sm btn-outline-warning">Média</a>
+                                <a href="{% url 'update_priority' fb.pk 'low' %}?institution={{ selected_institution }}" class="btn btn-sm btn-outline-secondary">Baixa</a>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="max-width:200px; word-break:break-word;">{{ fb.message }}</td>
+                    <td>
+                        <span class="badge bg-{% if fb.status == 'resolved' %}success{% elif fb.status == 'in_progress' %}info{% else %}warning text-dark{% endif %}">
+                            {{ fb.get_status_display }}
+                        </span>
+                        <div class="mt-2">
+                            {% if fb.status != 'resolved' %}
+                            <a href="{% url 'update_status' fb.pk 'resolved' %}?institution={{ selected_institution }}" class="btn btn-sm btn-success mb-1">Resolvido</a>
+                            {% endif %}
+                            {% if fb.status != 'in_progress' %}
+                            <a href="{% url 'update_status' fb.pk 'in_progress' %}?institution={{ selected_institution }}" class="btn btn-sm btn-info mb-1">Em Progresso</a>
+                            {% endif %}
+                            {% if fb.status != 'pending' %}
+                            <a href="{% url 'update_status' fb.pk 'pending' %}?institution={{ selected_institution }}" class="btn btn-sm btn-warning mb-1">Pendente</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'add_admin_note' fb.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="institution" value="{{ selected_institution }}">
+                            <textarea name="admin_note" rows="2" class="form-control mb-1" placeholder="Adicionar nota...">{{ fb.admin_note }}</textarea>
+                            <button type="submit" class="btn btn-sm btn-info">Salvar</button>
+                        </form>
+                    </td>
+                    <td class="d-flex flex-column gap-1">
+                        <a href="mailto:{{ fb.email }}" class="btn btn-sm btn-outline-primary">Responder</a>
+                        <a href="{% url 'delete_feedback' fb.pk %}?institution={{ selected_institution }}" class="btn btn-sm btn-danger" onclick="return confirm('Excluir este registro?');">Excluir</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="10" class="text-center">Nenhum registro encontrado para esta instituição.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %} 

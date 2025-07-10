@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card p-4 shadow-sm">
+                <div class="text-center mb-4">
+                    <span class="display-4 text-primary"><i class="bi bi-question-circle"></i></span>
+                    <h1 class="fw-bold mb-2">Central de Ajuda</h1>
+                    <p class="text-muted">Tudo que você precisa saber sobre o Portal de Feedback Educacional</p>
+                </div>
+
+                <!-- Tipos de Solicitação -->
+                <div class="mb-5">
+                    <h3 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-ui-checks"></i> Tipos de Solicitação
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-primary">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary">
+                                        <i class="bi bi-lightbulb"></i> Sugestão
+                                    </h5>
+                                    <p class="card-text">Ideias e propostas para melhorar a instituição, processos, infraestrutura ou serviços.</p>
+                                    <small class="text-muted">Ex: Sugestão de novos cursos, melhorias no campus, eventos acadêmicos</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-warning">
+                                <div class="card-body">
+                                    <h5 class="card-title text-warning">
+                                        <i class="bi bi-tools"></i> Suporte Técnico
+                                    </h5>
+                                    <p class="card-text">Problemas com sistemas, equipamentos, acesso a plataformas ou recursos tecnológicos.</p>
+                                    <small class="text-muted">Ex: Problemas com WiFi, portal do aluno, laboratórios de informática</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-danger">
+                                <div class="card-body">
+                                    <h5 class="card-title text-danger">
+                                        <i class="bi bi-exclamation-triangle"></i> Reclamação
+                                    </h5>
+                                    <p class="card-text">Problemas que precisam ser resolvidos ou situações que requerem atenção imediata.</p>
+                                    <small class="text-muted">Ex: Problemas com matrícula, notas, atendimento, infraestrutura</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-success">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">
+                                        <i class="bi bi-star"></i> Elogio
+                                    </h5>
+                                    <p class="card-text">Reconhecimento de boas práticas, professores, funcionários ou serviços.</p>
+                                    <small class="text-muted">Ex: Elogios a professores, funcionários, qualidade das aulas</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-info">
+                                <div class="card-body">
+                                    <h5 class="card-title text-info">
+                                        <i class="bi bi-question-circle"></i> Dúvida
+                                    </h5>
+                                    <p class="card-text">Questões sobre processos, informações, procedimentos ou esclarecimentos.</p>
+                                    <small class="text-muted">Ex: Dúvidas sobre disciplinas, horários, documentos, processos</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categorias -->
+                <div class="mb-5">
+                    <h3 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-tags"></i> Categorias
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-secondary">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-building display-6 text-secondary mb-2"></i>
+                                    <h6 class="card-title">Administrativo</h6>
+                                    <p class="card-text small">Processos burocráticos, matrículas, documentos</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-book display-6 text-primary mb-2"></i>
+                                    <h6 class="card-title">Acadêmico</h6>
+                                    <p class="card-text small">Questões de ensino, disciplinas, professores</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-warning">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-laptop display-6 text-warning mb-2"></i>
+                                    <h6 class="card-title">Técnico</h6>
+                                    <p class="card-text small">Problemas tecnológicos, sistemas, equipamentos</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-info">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-gear display-6 text-info mb-2"></i>
+                                    <h6 class="card-title">Infraestrutura</h6>
+                                    <p class="card-text small">Instalações físicas, salas, laboratórios</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-dark">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-three-dots display-6 text-dark mb-2"></i>
+                                    <h6 class="card-title">Outro</h6>
+                                    <p class="card-text small">Demais assuntos não categorizados</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Como Usar -->
+                <div class="mb-5">
+                    <h3 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-info-circle"></i> Como Usar
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0"><i class="bi bi-check-circle"></i> Passo a Passo</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ol class="mb-0">
+                                        <li class="mb-2">Preencha seus dados pessoais (nome e email)</li>
+                                        <li class="mb-2">Informe seus dados acadêmicos (matrícula, curso, etc.)</li>
+                                        <li class="mb-2">Selecione o tipo de solicitação</li>
+                                        <li class="mb-2">Escolha a categoria mais apropriada</li>
+                                        <li class="mb-2">Descreva detalhadamente sua solicitação</li>
+                                        <li class="mb-2">Clique em "Enviar Feedback"</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Dicas</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="mb-0">
+                                        <li class="mb-2">Seja específico e detalhado na descrição</li>
+                                        <li class="mb-2">Inclua informações relevantes (professor, disciplina)</li>
+                                        <li class="mb-2">Use linguagem clara e objetiva</li>
+                                        <li class="mb-2">Mantenha o respeito e cordialidade</li>
+                                        <li class="mb-2">Aguarde o retorno da equipe</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prioridades -->
+                <div class="mb-5">
+                    <h3 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-flag"></i> Níveis de Prioridade
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-secondary text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-flag text-secondary display-6 mb-2"></i>
+                                    <h6 class="card-title">Baixa</h6>
+                                    <p class="card-text small">Sugestões gerais, elogios</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-warning text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-flag-fill text-warning display-6 mb-2"></i>
+                                    <h6 class="card-title">Média</h6>
+                                    <p class="card-text small">Dúvidas, sugestões específicas</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-danger text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-flag-fill text-danger display-6 mb-2"></i>
+                                    <h6 class="card-title">Alta</h6>
+                                    <p class="card-text small">Problemas que afetam o aprendizado</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-danger text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-exclamation-triangle text-danger display-6 mb-2"></i>
+                                    <h6 class="card-title">Urgente</h6>
+                                    <p class="card-text small">Problemas críticos que impedem atividades</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contato -->
+                <div class="mb-4">
+                    <h3 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-envelope"></i> Contato
+                    </h3>
+                    <div class="alert alert-info">
+                        <h6 class="fw-bold"><i class="bi bi-info-circle"></i> Informações Importantes:</h6>
+                        <ul class="mb-0">
+                            <li>Seu feedback será analisado pela equipe administrativa</li>
+                            <li>Respostas serão enviadas para o email cadastrado</li>
+                            <li>Problemas urgentes são priorizados automaticamente</li>
+                            <li>Você pode acompanhar o status pelo número de protocolo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Botão Voltar -->
+                <div class="text-center">
+                    <a href="/" class="btn btn-primary btn-lg">
+                        <i class="bi bi-arrow-left"></i> Voltar ao Formulário
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
