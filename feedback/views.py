@@ -4,8 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q, Avg
 from datetime import datetime, timedelta
-from .forms import FeedbackForm, LoginForm, AdminNoteForm, SatisfactionForm
+from .forms import FeedbackForm, LoginForm, AdminNoteForm, SatisfactionForm, InstitutionForm
 from .models import Feedback, Institution
+from django.http import JsonResponse
 
 # Student-side: Feedback submission
 def home(request):
@@ -266,3 +267,16 @@ def reports(request):
         'total_resolved': resolved_feedbacks.count(),
     }
     return render(request, 'reports.html', context)
+
+@login_required
+def create_institution(request):
+    if request.method == 'POST':
+        form = InstitutionForm(request.POST)
+        if form.is_valid():
+            institution = form.save()
+            return JsonResponse({'success': True, 'name': institution.name, 'code': institution.code})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+    else:
+        form = InstitutionForm()
+    return render(request, 'partials/institution_form.html', {'form': form})

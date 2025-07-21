@@ -1,1 +1,0 @@
-from escola_interativa.wsgi import application 

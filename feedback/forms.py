@@ -1,5 +1,5 @@
 from django import forms
-from .models import Feedback
+from .models import Feedback, Institution
 from django.contrib.auth.forms import AuthenticationForm
 
 class FeedbackForm(forms.ModelForm):
@@ -65,4 +65,25 @@ class SatisfactionForm(forms.ModelForm):
         }
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(label='Usuário', widget=forms.TextInput(attrs={'autofocus': True})) 
+    username = forms.CharField(label='Usuário', widget=forms.TextInput(attrs={'autofocus': True}))
+
+class InstitutionForm(forms.ModelForm):
+    class Meta:
+        model = Institution
+        fields = ['name', 'code', 'cnpj', 'email', 'phone', 'address']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome da instituição'}),
+            'code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Código único'}),
+            'cnpj': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'CNPJ'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'E-mail de contato'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Telefone'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Endereço', 'rows': 2}),
+        }
+        labels = {
+            'name': 'Nome da Instituição',
+            'code': 'Código Único',
+            'cnpj': 'CNPJ',
+            'email': 'E-mail',
+            'phone': 'Telefone',
+            'address': 'Endereço',
+        } 

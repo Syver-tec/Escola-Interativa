@@ -6,6 +6,7 @@ class Institution(models.Model):
     """Modelo para gerenciar múltiplas instituições educacionais"""
     name = models.CharField(max_length=200, verbose_name='Nome da Instituição')
     code = models.CharField(max_length=50, unique=True, verbose_name='Código Único')
+    cnpj = models.CharField(max_length=18, verbose_name='CNPJ')
     domain = models.CharField(max_length=100, blank=True, verbose_name='Domínio')
     address = models.TextField(blank=True, null=True, verbose_name='Endereço')
     phone = models.CharField(max_length=20, blank=True, null=True, verbose_name='Telefone')

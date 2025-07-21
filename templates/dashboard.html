@@ -10,7 +10,7 @@
             <h4 class="mb-0"><i class="bi bi-building"></i> Selecione a Instituição</h4>
             <p class="text-muted mb-0">Escolha a escola/faculdade para visualizar os feedbacks</p>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 d-flex align-items-center gap-2">
             {% if institutions %}
             <form method="get" class="d-flex gap-2">
                 <select name="institution" class="form-select" onchange="this.form.submit()">
@@ -29,9 +29,68 @@
                 Entre em contato com o administrador do sistema.
             </div>
             {% endif %}
+            <button class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#institutionModal">
+                <i class="bi bi-plus-circle"></i> Nova Instituição
+            </button>
         </div>
     </div>
 </div>
+
+<!-- Modal de Cadastro de Instituição -->
+<div class="modal fade" id="institutionModal" tabindex="-1" aria-labelledby="institutionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="institutionModalLabel"><i class="bi bi-plus-circle"></i> Nova Instituição</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body" id="institution-form-body">
+        <!-- O formulário será carregado via AJAX -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementById('institutionModal');
+    if (modal) {
+        modal.addEventListener('show.bs.modal', function () {
+            fetch('{% url "create_institution" %}')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('institution-form-body').innerHTML = html;
+                });
+        });
+    }
+
+    // Submissão AJAX do formulário
+    document.body.addEventListener('submit', function(e) {
+        if (e.target && e.target.id === 'institution-form') {
+            e.preventDefault();
+            var form = e.target;
+            var data = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: data,
+                headers: {'X-Requested-With': 'XMLHttpRequest'}
+            })
+            .then(response => response.json())
+            .then(json => {
+                if (json.success) {
+                    location.reload();
+                } else {
+                    var errors = '';
+                    for (var field in json.errors) {
+                        errors += '<div class="alert alert-danger">' + json.errors[field].join('<br>') + '</div>';
+                    }
+                    document.getElementById('institution-form-body').innerHTML = errors + form.outerHTML;
+                }
+            });
+        }
+    });
+});
+</script>
 
 <!-- Formulário de Acesso (aparece apenas quando uma instituição é selecionada) -->
 {% if selected_institution %}

@@ -37,52 +37,78 @@ Um sistema completo de gerenciamento de feedback e tickets para instituições e
 - **Proteção contra acesso não autorizado**
 - **Logs de atividades**
 
-## 🚀 Deploy no Vercel
+## 🚀 Deploy e Produção
 
-### Pré-requisitos
-1. Conta no [Vercel](https://vercel.com)
-2. Conta no [GitHub](https://github.com)
-3. Repositório com o código
+### 1. Variáveis Sensíveis e Ambiente (.env)
 
-### Passos para Deploy
+Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
 
-1. **Preparar o repositório**
-```bash
-git add .
-git commit -m "Preparando para deploy no Vercel"
-git push origin main
+```
+SECRET_KEY=sua-chave-secreta
+DEBUG=False
+ALLOWED_HOSTS=seu_dominio.com,localhost,127.0.0.1
 ```
 
-2. **Conectar ao Vercel**
-- Acesse https://vercel.com
-- Faça login com sua conta GitHub
-- Clique em "New Project"
-- Importe o repositório do GitHub
-- Configure as variáveis de ambiente:
-  - `DJANGO_SETTINGS_MODULE`: `escola_interativa.production`
-  - `VERCEL`: `true`
+No `settings.py`, certifique-se de que as variáveis são lidas do ambiente:
 
-3. **Deploy automático**
-O Vercel detectará automaticamente que é um projeto Django e fará o deploy.
-
-### Configuração Pós-Deploy
-
-1. **Criar superusuário**
-```bash
-python manage.py createsuperuser
+```python
+import os
+SECRET_KEY = os.environ.get('SECRET_KEY', 'chave-insegura-para-dev')
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+ALLOWED_HOSTS=localhost,127.0.0.1
 ```
 
-2. **Criar instituições**
-```bash
-python manage.py create_institution "Nome da Instituição" "codigo"
+### 2. Coleta de Arquivos Estáticos
+
+Antes de rodar em produção, execute:
+
+```
+python manage.py collectstatic
 ```
 
-3. **Atribuir usuários às instituições**
-```bash
-python manage.py assign_user_to_institution username institution_code
+### 3. Backup e Migração do Banco de Dados
+
+**Backup do SQLite:**
+```
+cp db.sqlite3 db_backup.sqlite3
+```
+**Restauração:**
+```
+cp db_backup.sqlite3 db.sqlite3
 ```
 
-## 💻 Desenvolvimento Local
+**Migração para PostgreSQL:**
+No `settings.py`:
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'nome_do_banco',
+        'USER': 'usuario',
+        'PASSWORD': 'senha',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+```
+
+### 4. Testes de Fluxos e Permissões
+
+- Teste todos os fluxos: envio de feedback, login, dashboard, filtros, relatórios, notas administrativas, priorização, etc.
+- Teste com diferentes tipos de usuários (superusuário e usuário comum autorizado).
+- Teste o acesso negado para usuários não autorizados em instituições diferentes.
+- Teste mensagens de sucesso/erro e responsividade em dispositivos móveis.
+
+### 5. Remover Dependências Não Utilizadas
+
+- Se não for usar mais `django-bootstrap4`, remova de `INSTALLED_APPS` no `settings.py` e do `requirements.txt`.
+- Rode `pip freeze > requirements.txt` para atualizar as dependências.
+
+### 6. Deploy Futuro (Netlify ou outro)
+
+> **Nota:** O Netlify não executa Python nativamente. Para deploy Django, recomenda-se usar Render, Railway, Heroku ou outro serviço de backend. O Netlify pode ser usado para frontend estático, caso o projeto seja separado em frontend/backend.
+
+## 🛠️ Desenvolvimento Local
 
 ### Instalação
 
@@ -286,3 +312,31 @@ Contribuições são bem-vindas! Para contribuir:
 ---
 
 **Desenvolvido com ❤️ para a comunidade educacional brasileira** 
+
+### Como resolver
+
+1. **Abra o arquivo `.env`** na raiz do seu projeto.
+2. **Garanta que a linha de ALLOWED_HOSTS esteja assim:**
+   ```
+   ALLOWED_HOSTS=localhost,127.0.0.1
+   ```
+   (Se já estiver, confira se não há espaços ou erros de digitação.)
+
+3. **Salve o arquivo**.
+
+4. **Pare o servidor (Ctrl+C) e inicie novamente:**
+   ```bash
+   python manage.py runserver
+   ```
+
+---
+
+#### Observação
+
+- Se você acessar por `localhost:8000`, o valor `localhost` precisa estar em `ALLOWED_HOSTS`.
+- Se acessar por `127.0.0.1:8000`, o valor `127.0.0.1` precisa estar em `ALLOWED_HOSTS`.
+- Para acessar de outro computador na rede, adicione o IP da sua máquina também.
+
+---
+
+Se mesmo assim continuar o erro, me envie o conteúdo do seu `.env` (pode ocultar a SECRET_KEY) para eu conferir! 
